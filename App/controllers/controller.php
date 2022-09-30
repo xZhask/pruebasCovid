@@ -227,9 +227,7 @@ function controlador($accion)
                 }
                 array_push($Arr_regiones, ['region' => $Region->region, 'unidades' => $Arr_Unidades]);
             }
-
             /* ----------- CREACIÓN DE TABLA --------- */
-
 
             $DiasMes = date('t', strtotime($fecha));
             /* THEAD - CABECERA DE TABLA */

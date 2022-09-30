@@ -38,8 +38,7 @@ function abrirUsuarios() {
 	remove_addClass('#lnk-usuarios');
 	accionNav();
 }
-
-$('.closebtn').click(function(event) {
+$('.closebtn').click(function() {
 	cerrarmodal();
 });
 $('.close-modal-area').click(function(event) {
@@ -51,12 +50,12 @@ const cerrarmodal = () => {
 	Limpiar();
 };
 $(function() {
-	$(document).on('click', '#BtnAddPruebaC', function(event) {
+	$(document).on('click', '#BtnAddPruebaC', function() {
 		abrirFormPrueba('C');
 	});
 });
 $(function() {
-	$(document).on('click', '#BtnAddPruebaM', function(event) {
+	$(document).on('click', '#BtnAddPruebaM', function() {
 		abrirFormPrueba('M');
 	});
 });
@@ -77,14 +76,14 @@ const abrirFormPrueba = (tvirus) => {
 	CargarFechaActual(`Fecha`);
 };
 $(function() {
-	$(document).on('click', '#btn-clave', function(event) {
+	$(document).on('click', '#btn-clave', function() {
 		accionNav();
 		$('#modal2').css('display', 'table');
 		$('#modal2').css('position', 'absolute');
 	});
 });
 $(function() {
-	$(document).on('click', '#BtnAddUsuario', function(event) {
+	$(document).on('click', '#BtnAddUsuario', function() {
 		$('#accionUsuario').val('REGISTRAR_USUARIO');
 		$('#modalUsuario').css('display', 'table');
 		$('#modalUsuario').css('position', 'absolute');
@@ -98,7 +97,7 @@ $(function() {
 	});
 });
 $(function() {
-	$(document).on('click', '.edit-user', function(event) {
+	$(document).on('click', '.edit-user', function() {
 		$('#accionUsuario').val('EDITAR_USUARIO');
 		$('#modalUsuario').css('display', 'table');
 		$('#modalUsuario').css('position', 'absolute');
@@ -110,12 +109,11 @@ $(function() {
 		$('#dniUsuario').addClass('input-readonly');
 		$('#dniUsuario').prop('readonly', true);
 
-		var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
-		usuario = $(tr).find('td').eq(0).html();
-		nombre = $(tr).find('td').eq(1).html();
-		tipousuario = $(tr).find('td').eq(3).html();
-		idregion = $(tr).find('td').eq(4).html();
+		let tr = $(this).closest('tr');
+		let usuario = $(tr).find('td').eq(0).html();
+		let nombre = $(tr).find('td').eq(1).html();
+		let tipousuario = $(tr).find('td').eq(3).html();
+		let idregion = $(tr).find('td').eq(4).html();
 
 		$('#dniUsuario').val(usuario);
 		$('#nombreUsuario').val(nombre);
@@ -124,9 +122,9 @@ $(function() {
 	});
 });
 $(function() {
-	$(document).on('change', '#cbxreset', function(event) {
+	$(document).on('change', '#cbxreset', function(e) {
 		$('#passUsuario').val('');
-		if (event.target.checked) {
+		if (e.target.checked) {
 			$('#passUsuario').prop('readonly', false);
 			$('#passUsuario').removeClass('input-readonly');
 		} else {
@@ -137,76 +135,79 @@ $(function() {
 });
 
 $(function() {
-	$(document).on('click', '#tb-listadoC .btn-edit', function(event) {
-		event.preventDefault();
-		var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
+	$(document).on('click', '#tb-listadoC .btn-edit', function(e) {
+		e.preventDefault();
+		let tr = $(this).closest('tr');
 		let idreporte = $(tr).find('td').eq(0).html();
-
 		abrirEditarReporte(idreporte, 'C');
 	});
 });
 $(function() {
-	$(document).on('click', '#tb-listadoM .btn-edit', function(event) {
-		event.preventDefault();
-		var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
+	$(document).on('click', '#tb-listadoM .btn-edit', function(e) {
+		e.preventDefault();
+		let tr = $(this).closest('tr');
 		let idreporte = $(tr).find('td').eq(0).html();
-
 		abrirEditarReporte(idreporte, 'M');
 	});
 });
 
 const abrirEditarReporte = (idreporte, tvirus) => {
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: {
-			accion: 'BUSCAR_REPORTE',
-			idreporte: idreporte
+	let data = { accion: 'BUSCAR_REPORTE', idreporte: idreporte };
+	let RespuestaAjax = ajaxFunction(data);
+
+	let json = JSON.parse(RespuestaAjax);
+	$('#IdReporte').val(idreporte);
+	$('#Fecha').val(json.fecha);
+	$('#IdIpress').val(json.codigo);
+	$('#Ipress').val(json.ipress);
+	$('#Comentario').val(json.comentario);
+	$('#tvirus').val(json.virus);
+	$('#Fecha').prop('readonly', 'true');
+	$('#Ipress').prop('readonly', 'true');
+	$('#AccionReporte').val('EDITAR_REGISTRO');
+	$('#TittleForm').html('Editar Registro');
+
+	let arrBeneficiarios = [ 'ta', 'td', 'tr', 'f' ];
+	let arrPruebas = [ 'pcr', 'ant', 'ser' ];
+
+	for (let i = 0; i < arrBeneficiarios.length; i++) {
+		const element = arrBeneficiarios[i];
+		let tb = element.toUpperCase();
+		let reporte = json.reporte[`${tb}`];
+		for (let j = 0; j < arrPruebas.length; j++) {
+			const elementPrueba = arrPruebas[j];
+			let prueba = typeof reporte !== 'undefined' ? json.reporte[`${tb}`][`${elementPrueba}`] : '0';
+			$(`#${elementPrueba}_${element}`).val(prueba);
 		}
-	}).done(function(resultado) {
-		let json = JSON.parse(resultado);
-		$('#IdReporte').val(idreporte);
-		$('#Fecha').val(json.fecha);
-		$('#IdIpress').val(json.codigo);
-		$('#Ipress').val(json.ipress);
-		$('#Comentario').val(json.comentario);
-		$('#tvirus').val(json.virus);
-
-		$('#Fecha').prop('readonly', 'true');
-		$('#Ipress').prop('readonly', 'true');
-		$('#AccionReporte').val('EDITAR_REGISTRO');
-		$('#TittleForm').html('Editar Registro');
-
-		let arrBeneficiarios = [ 'ta', 'td', 'tr', 'f' ];
-		let arrPruebas = [ 'pcr', 'ant', 'ser' ];
-
-		for (let i = 0; i < arrBeneficiarios.length; i++) {
-			const element = arrBeneficiarios[i];
-			let tb = element.toUpperCase();
-
-			let reporte = json.reporte[`${tb}`];
-
-			for (let j = 0; j < arrPruebas.length; j++) {
-				const elementPrueba = arrPruebas[j];
-				let prueba = typeof reporte !== 'undefined' ? json.reporte[`${tb}`][`${elementPrueba}`] : '0';
-				$(`#${elementPrueba}_${element}`).val(prueba);
-			}
-		}
-		if (tvirus === 'C') {
-			$('.input-ant').removeClass('nvisible');
-			$('.input-ser').removeClass('nvisible');
-		} else {
-			$('.input-ant').addClass('nvisible');
-			$('.input-ser').addClass('nvisible');
-		}
-	});
+	}
+	if (tvirus === 'C') {
+		$('.input-ant').removeClass('nvisible');
+		$('.input-ser').removeClass('nvisible');
+	} else {
+		$('.input-ant').addClass('nvisible');
+		$('.input-ser').addClass('nvisible');
+	}
 	$('#modal').css('display', 'table');
 	$('#modal').css('position', 'absolute');
 };
-
 /* -------------------------------------------------- */
+const ajaxFunction = (data) => {
+	let respuesta;
+	$.ajax({
+		type: 'POST',
+		url: 'App/controllers/controller.php',
+		data: data,
+		async: false,
+		//dataType: 'JSON',
+		error: function() {
+			alert('Error occured');
+		},
+		success: function(response) {
+			respuesta = response;
+		}
+	});
+	return respuesta;
+};
 function CargarFechaActual(idcontrol) {
 	let date = new Date();
 	let year = date.getFullYear();
@@ -234,66 +235,49 @@ $(function() {
 	});
 });
 const CargarListadoHoy = (fecha, tvirus, tabla) => {
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: {
-			accion: 'LISTAR_REGISTROS_HOY',
-			fecha: fecha,
-			tvirus: tvirus
-		}
-	}).done(function(resultado) {
-		$(tabla).html(resultado);
-	});
+	let data = { accion: 'LISTAR_REGISTROS_HOY', fecha: fecha, tvirus: tvirus };
+	let RespuestaAjax = ajaxFunction(data);
+	$(tabla).html(RespuestaAjax);
 };
 function RegistrarReporte() {
-	virus = $('#tvirus').val();
-	tabla = `#tb-listado${virus}`;
-	fecha = $(`#FechaFiltro${virus}`).val();
-
-	ipress = $('#IdIpress').val();
-	if (ipress === '') {
-		Swal.fire('No ha seleccionado una Ipress', 'Ingrese IPRESS', 'warning');
-	} else {
-		formulario = $('#FrmPrueba').serializeArray();
+	let virus = $('#tvirus').val();
+	let tabla = `#tb-listado${virus}`;
+	let fecha = $(`#FechaFiltro${virus}`).val();
+	let ipress = $('#IdIpress').val();
+	if (ipress === '') Swal.fire('No ha seleccionado una Ipress', 'Ingrese IPRESS', 'warning');
+	else {
+		let formulario = $('#FrmPrueba').serializeArray();
 		$('#btn-registrar').prop('disabled', true);
 		$('#btn-registrar').addClass('btn-disabled');
-		$.ajax({
-			method: 'POST',
-			url: 'App/controllers/controller.php',
-			data: formulario
-		}).done(function(resultado) {
-			if (resultado === 'REGISTRADO' || resultado === 'ACTUALIZADO') {
-				Swal.fire(`Se ha ${resultado} Correctamente`, '', 'success');
-				cerrarmodal();
-				CargarListadoHoy(fecha, virus, tabla);
-			} else Swal.fire('No se Registró', resultado, 'error');
+		let RespuestaAjax = ajaxFunction(formulario);
+		if (RespuestaAjax === 'REGISTRADO' || RespuestaAjax === 'ACTUALIZADO') {
+			Swal.fire(`Se ha ${RespuestaAjax} Correctamente`, '', 'success');
+			cerrarmodal();
+			CargarListadoHoy(fecha, virus, tabla);
+		} else Swal.fire('No se Registró', RespuestaAjax, 'error');
 
-			$('#btn-registrar').prop('disabled', false);
-			$('#btn-registrar').removeClass('btn-disabled');
-		});
+		$('#btn-registrar').prop('disabled', false);
+		$('#btn-registrar').removeClass('btn-disabled');
 	}
 }
 
 $(function() {
-	$(document).on('click', '#tb-listadoC .btn-delete', function(event) {
-		tabla = `#tb-listadoC`;
-		fecha = $(`#FechaFiltroC`).val();
-		event.preventDefault();
-		//var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
-		idreporte = $(tr).find('td').eq(0).html();
+	$(document).on('click', '#tb-listadoC .btn-delete', function(e) {
+		let tabla = `#tb-listadoC`;
+		let fecha = $(`#FechaFiltroC`).val();
+		e.preventDefault();
+		let tr = $(this).closest('tr');
+		let idreporte = $(tr).find('td').eq(0).html();
 		eliminarRegistro(idreporte, fecha, 'C', tabla);
 	});
 });
 $(function() {
-	$(document).on('click', '#tb-listadoM .btn-delete', function(event) {
-		tabla = `#tb-listadoM`;
-		fecha = $(`#FechaFiltroM`).val();
-		event.preventDefault();
-		//var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
-		idreporte = $(tr).find('td').eq(0).html();
+	$(document).on('click', '#tb-listadoM .btn-delete', function(e) {
+		let tabla = `#tb-listadoM`;
+		let fecha = $(`#FechaFiltroM`).val();
+		e.preventDefault();
+		let tr = $(this).closest('tr');
+		let idreporte = $(tr).find('td').eq(0).html();
 		eliminarRegistro(idreporte, fecha, 'M', tabla);
 	});
 });
@@ -308,19 +292,12 @@ const eliminarRegistro = (idreporte, fecha, virus, tabla) => {
 		cancelButtonText: 'Cancelar'
 	}).then((result) => {
 		if (result.isConfirmed) {
-			$.ajax({
-				method: 'POST',
-				url: 'App/controllers/controller.php',
-				data: {
-					accion: 'ELIMINAR_REGISTRO',
-					idreporte: idreporte
-				}
-			}).done(function(resultado) {
-				if (resultado === 'ELIMINADO') {
-					Swal.fire(resultado, 'Se ha eliminado el registro', 'success');
-					CargarListadoHoy(fecha, virus, tabla); //MODIFICAR
-				}
-			});
+			let data = { accion: 'ELIMINAR_REGISTRO', idreporte: idreporte };
+			let RespuestaAjax = ajaxFunction(data);
+			if (RespuestaAjax === 'ELIMINADO') {
+				Swal.fire(RespuestaAjax, 'Se ha eliminado el registro', 'success');
+				CargarListadoHoy(fecha, virus, tabla);
+			}
 		}
 	});
 };
@@ -328,14 +305,13 @@ function Limpiar() {
 	FrmPrueba.reset();
 	frmUsuario.reset();
 }
-
 $(function() {
-	$(document).on('click', '#BtnBuscarRepC', function(event) {
+	$(document).on('click', '#BtnBuscarRepC', function() {
 		GenerarReporte('C');
 	});
 });
 $(function() {
-	$(document).on('click', '#BtnBuscarRepM', function(event) {
+	$(document).on('click', '#BtnBuscarRepM', function() {
 		GenerarReporte('M');
 	});
 });
@@ -344,21 +320,12 @@ const GenerarReporte = (tvirus) => {
 	let tb = $('#tipo_benef').val();
 	let tipo_benef = '';
 	tipo_benef = tb === 'T' ? $('#tipo_titular').val() : tb;
-
-	periodo = $('#periodo').val();
+	let periodo = $('#periodo').val();
 	$('#t-report').html('<tr><td>Cargando...</td></tr>');
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: {
-			accion: accion,
-			periodo: periodo,
-			tipo_benef: tipo_benef
-		}
-	}).done(function(resultado) {
-		$('#t-report').html(resultado);
-		CargarBtnExport(tvirus);
-	});
+	let data = { accion: accion, periodo: periodo, tipo_benef: tipo_benef };
+	let RespuestaAjax = ajaxFunction(data);
+	$('#t-report').html(RespuestaAjax);
+	CargarBtnExport(tvirus);
 };
 function CargarBtnExport(tvirus) {
 	let ruta = tvirus === 'C' ? 'ReportePruebasCovid.php' : 'ReportePruebasMono.php';
@@ -368,116 +335,72 @@ function CargarBtnExport(tvirus) {
 	$('#BtnExport').prop('href', `resources/libraries/Excel/${ruta}?periodo=${periodo}&tipo_benef=${tipo_benef}`);
 }
 $(function() {
-	$(document).on('submit', '#frm-login', function(event) {
-		event.preventDefault();
-		DataFrmLogin = $('#frm-login').serializeArray();
-		$.ajax({
-			method: 'POST',
-			url: 'App/controllers/controller.php',
-			data: DataFrmLogin
-		}).done(function(resultado) {
-			if (resultado === 'INICIO') {
-				window.location.assign('index.php');
-			} else {
-				Swal.fire('Error de inicio', resultado, 'error');
-				$('#pass').val('');
-			}
-		});
+	$(document).on('submit', '#frm-login', function(e) {
+		e.preventDefault();
+		let DataFrmLogin = $('#frm-login').serializeArray();
+		let RespuestaAjax = ajaxFunction(DataFrmLogin);
+		if (RespuestaAjax === 'INICIO') window.location.assign('index.php');
+		else {
+			Swal.fire('Error de inicio', RespuestaAjax, 'error');
+			$('#pass').val('');
+		}
 	});
 });
 function logout() {
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: { accion: 'LOGOUT' }
-	}).done(function(html) {
-		window.location.assign('login.html');
-	});
+	let RespuestaAjax = ajaxFunction({ accion: 'LOGOUT' });
+	window.location.assign('login.html');
 }
-function CambiarPass() {
-	clave1 = $('#Clave1').val();
-	clave2 = $('#Clave2').val();
-	if (clave1 === '' || clave2 === '') {
-		Swal.fire('Ingrese todos los campos', '', 'error');
-	} else {
-		if (clave1 !== clave2) {
-			Swal.fire('Las contraseñas no coinciden', 'escriba la misma contraseña', 'error');
-		} else {
-			form = $('#FrmCambioClave').serializeArray();
-			$.ajax({
-				method: 'POST',
-				url: 'App/controllers/controller.php',
-				data: form
-			}).done(function(resultado) {
-				if (resultado === 'SE MODIFICÓ CONTRASEÑA') {
-					Swal.fire(resultado, '', 'success');
-					$('.modal').css('display', 'none');
-					document.getElementById('FrmCambioClave').reset();
-				} else {
-					Swal.fire('Ocurrió un Error', '', 'error');
-				}
-			});
+const CambiarPass = () => {
+	let clave1 = $('#Clave1').val();
+	let clave2 = $('#Clave2').val();
+	if (clave1 === '' || clave2 === '') Swal.fire('Ingrese todos los campos', '', 'error');
+	else {
+		if (clave1 !== clave2) Swal.fire('Las contraseñas no coinciden', 'escriba la misma contraseña', 'error');
+		else {
+			let form = $('#FrmCambioClave').serializeArray();
+			let RespuestaAjax = ajaxFunction(form);
+			if (RespuestaAjax === 'SE MODIFICÓ CONTRASEÑA') {
+				Swal.fire(RespuestaAjax, '', 'success');
+				$('.modal').css('display', 'none');
+				document.getElementById('FrmCambioClave').reset();
+			} else Swal.fire('Ocurrió un Error', '', 'error');
 		}
 	}
-}
+};
 $(function() {
-	$(document).on('keyup', '#FiltrarUser', function(event) {
+	$(document).on('keyup', '#FiltrarUser', function() {
 		ListarUsuario();
 	});
 });
-function ListarUsuario() {
+const ListarUsuario = () => {
 	let filtroUser = $('#FiltrarUser').val();
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: { accion: 'LISTAR_USUARIOS', filtro: filtroUser }
-	}).done(function(html) {
-		$('#tbusuarios').html(html);
-	});
-}
-function cargarRegiones() {
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: { accion: 'LISTAR_REGIONES' }
-	}).done(function(html) {
-		$('#RegionUsuario').html(html);
-	});
-}
-function BuscarPersona() {
-	dni = $('#dniUsuario').val();
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: {
-			accion: 'CONSULTA_DNI',
-			dni: dni
-		}
-	}).done(function(resultado) {
-		json = JSON.parse(resultado);
-		if (json['success'] === true) {
-			$('#nombreUsuario').val(json['data'].nombre_completo);
-		}
-	});
-}
-function RegistrarUsuario() {
-	form = $('#frmUsuario').serializeArray();
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: form
-	}).done(function(resultado) {
-		Swal.fire(resultado, 'Se registró correctamente al usuario', 'success');
-		ListarUsuario();
-		cerrarmodal();
-	});
-}
+	let data = { accion: 'LISTAR_USUARIOS', filtro: filtroUser };
+	let RespuestaAjax = ajaxFunction(data);
+	$('#tbusuarios').html(RespuestaAjax);
+};
+const cargarRegiones = () => {
+	let RespuestaAjax = ajaxFunction({ accion: 'LISTAR_REGIONES' });
+	$('#RegionUsuario').html(RespuestaAjax);
+};
+const BuscarPersona = () => {
+	let dni = $('#dniUsuario').val();
+	let data = { accion: 'CONSULTA_DNI', dni: dni };
+	let RespuestaAjax = ajaxFunction(data);
+	json = JSON.parse(RespuestaAjax);
+	if (json['success'] === true) $('#nombreUsuario').val(json['data'].nombre_completo);
+};
+const RegistrarUsuario = () => {
+	let form = $('#frmUsuario').serializeArray();
+	let RespuestaAjax = ajaxFunction(form);
+	Swal.fire(RespuestaAjax, 'Se registró correctamente al usuario', 'success');
+	ListarUsuario();
+	cerrarmodal();
+};
 $(function() {
-	$(document).on('click', '.btnCambiarEstado', function(event) {
-		var parent = $(this).closest('table');
-		var tr = $(this).closest('tr');
-		usuario = $(tr).find('td').eq(0).html();
-		estado = $(tr).find('td').eq(5).html();
+	$(document).on('click', '.btnCambiarEstado', function() {
+		let tr = $(this).closest('tr');
+		let usuario = $(tr).find('td').eq(0).html();
+		let estado = $(tr).find('td').eq(5).html();
 		estado === 'A' ? (estado = 'I') : (estado = 'A');
 		Swal.fire({
 			title: 'Activar/Desactivar Usuario',
@@ -488,36 +411,30 @@ $(function() {
 			confirmButtonText: 'Anular',
 			cancelButtonText: 'Cancelar'
 		}).then((result) => {
-			if (result.isConfirmed) {
-				CambiarEstado(usuario, estado);
-			}
+			if (result.isConfirmed) CambiarEstado(usuario, estado);
 		});
 	});
 });
-function CambiarEstado(usuario, estado) {
-	$.ajax({
-		method: 'POST',
-		url: 'App/controllers/controller.php',
-		data: { accion: 'CAMBIAR_ESTADO', usuario: usuario, estado: estado }
-	}).done(function(resultado) {
-		Swal.fire(resultado, 'Se actualizó información', 'success');
-		ListarUsuario();
-	});
-}
+const CambiarEstado = (usuario, estado) => {
+	let data = { accion: 'CAMBIAR_ESTADO', usuario: usuario, estado: estado };
+	let RespuestaAjax = ajaxFunction(data);
+	Swal.fire(RespuestaAjax, 'Se actualizó información', 'success');
+	ListarUsuario();
+};
 $(function() {
-	$(document).on('change', '#tipo_benef', function(event) {
+	$(document).on('change', '#tipo_benef', function() {
 		let tipo_benef = $('#tipo_benef').val();
 		let select_toggle = tipo_benef == 'T' ? 'block' : 'none';
 		$('#tipo_titular').css('display', select_toggle);
 	});
 });
 $(function() {
-	$(document).on('click', '.menu', function(event) {
+	$(document).on('click', '.menu', function() {
 		accionNav();
 	});
 });
 $(function() {
-	$(document).on('click', '#lnk-listado', function(event) {
+	$(document).on('click', '#lnk-listado', function() {
 		abrir_seccion('listado.php');
 		remove_addClass('#lnk-listado');
 		accionNav();
