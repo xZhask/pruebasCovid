@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/js/jquery-ui-1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="resources/js/sweetalert2.min.css">
+    <link rel="stylesheet" href="resources/css/styles.css">
+    <script src="https://kit.fontawesome.com/47b4aaa3bf.js" crossorigin="anonymous"></script>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="wr-login">
+        <div class="cont-logo-inicial">
+            <img src="resources/img/dirsapol.png" alt="">
+            <img src="resources/img/escudoPNP.png" alt="">
+        </div>
+        <div class="linea-v"></div>
+        <form id="frm-login" class="form-login" method="post">
+            <div class="detalle-login">
+                <i class="fa-solid fa-building-shield"></i>
+            </div>
+            <h2>Login</h2>
+            <input type="hidden" name="accion" value="LOGIN">
+            <div class="cont-input-form">
+                <input type="text" name="User" id="User" placeholder="Usuario">
+            </div>
+            <div class="cont-input-form">
+                <input type="password" name="Pass" id="Pass" placeholder="Contraseña">
+            </div>
+            <button type="submit" class="btnform">Registrar</button>
+        </form>
+    </div>
+    <script src="resources/js/sweetalert2.all.min.js"></script>
+  <script language="javascript" src="resources/js/jquery-3.6.0.min.js"></script>
+  <script language="javascript" src="resources/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="resources/js/function.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+@media screen and (max-width: 767px) {
+    .nav{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0,0,0,.8);
+        padding-top: 100px;
+        left: -100%;
+        transition: all ease .4s;
+        -webkit-transition: all ease .4s;
+        -moz-transition: all ease .4s;
+        -ms-transition: all ease .4s;
+        -o-transition: all ease .4s;
+        backdrop-filter: blur(5px);
+        z-index: 2;
+}
+    .nav.active{
+        left: 0 !important;
+    }
+    .nav ul{
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    .nav ul li{
+        max-height: 50px;
+        width: 100%;
+    }
+    .nav ul li a{
+        width: 100%;
+        display: block;
+        padding: 0 20px;
+        display: flex;
+        border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .ul-toggle{
+        z-index: 1;
+        top: -10px !important;
+        width: 207px !important;
+        left: 35%;
+    }
+    .triangulo{
+        transform: rotate(270deg);
+        -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -ms-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        top: 20px;
+        left: -23px;
+    }
+    .name{
+        width: 100%;
+    }
+    .name h2{
+        font-size: 1.3em;
+    }
+    .menu{
+        display: block !important;
+    }
+    .cont-reporte .header-container{
+        height: 110px;
+    }
+}

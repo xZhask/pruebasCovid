@@ -1,0 +1,53 @@
+<div class="container cont-reporte">
+    <div class="header-container">
+        <h2>Reporte de Pruebas Covid</h2>
+        <div class="controls-search">
+            <div class="cont-filters">
+                <label for="">Periodo:</label>
+                <input type="month" name="periodo" id="periodo">
+                <button type="button" class="btn-primary" id="BtnBuscarRepM">Buscar</button>
+            </div>
+            <div class="cont-filters">
+                <label for="">T. benef:</label>
+                <select name="tipo_benef" id="tipo_benef">
+                    <option value="G">Todos</option>
+                    <option value="T">Titulares</option>
+                    <option value="F">Familiares</option>
+                </select>
+                <select name="tipo_titular" id="tipo_titular">
+                    <option value="T">Todos</option>
+                    <option value="TA">Actividad</option>
+                    <option value="TD">Disponibilidad</option>
+                    <option value="TR">Retiro</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="body-container">
+        <div class="cont-export">
+            <a href="" id="BtnExport" class="Btn-export green">Exportar Excel</a>
+        </div>
+        <table class="tb-report" id="t-report">
+            <thead id="th-report">
+                <tr>
+                    <th colspan="2">IPRESS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Ajax-->
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    CargarMesYear()
+    function CargarMesYear() {
+        date = new Date();
+        year = date.getFullYear();
+        mes = date.getMonth() + 1;
+        mes = (mes < 10) ? '-0' + mes : mes;
+        $('#periodo').val(year + mes);
+        CargarBtnExport()
+    }
+    GenerarReporte('M')
+</script>

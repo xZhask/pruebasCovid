@@ -1,0 +1,27 @@
+<div class="container cont-listado">
+    <h2>Usuarios</h2>
+    <div class="header-container">
+        <input type="text" class="input-filtro" name="FiltrarUser" id="FiltrarUser" placeholder="Buscar Usuario">
+        <button type="button" class="btn-primary" id="BtnAddUsuario">Agregar</button>
+    </div>
+    <div class="body-container">
+        <table class="t-listado" id="t-usuarios">
+            <thead id="th-usuarios">
+                <tr>
+                    <th>DNI</th>
+                    <th>Apellidos y Nombre</th>
+                    <th>Macro</th>
+                    <th>Editar</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tbusuarios">
+                <!--Ajax-->
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    ListarUsuario();
+    cargarRegiones();
+</script>
