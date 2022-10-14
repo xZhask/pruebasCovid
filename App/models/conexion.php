@@ -4,7 +4,7 @@ try {
     $servidor = 'localhost';
     $usuario = 'root';
     $pass = 'mysql';
-    $db = 'dbpruebas';
+    $db = 'db_pruebas';
     //$usuario = 'odindeve_josue';
     //$pass = '1I~j0uCT{Va1'; 
     //$db = 'odindeveloper_pruebas';

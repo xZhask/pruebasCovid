@@ -24,7 +24,7 @@ while ($row = $ListadoIpress->fetch(PDO::FETCH_NAMED)) {
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="resources/js/jquery-ui-1.12.1/jquery-ui.min.css" />
+  <link rel="stylesheet" href="resources/js/jquery-ui-1.13.2/jquery-ui.min.css" />
   <link rel="stylesheet" href="resources/js/sweetalert2.min.css">
   <link rel="stylesheet" href="resources/css/styles.css">
   <link rel="stylesheet" href="resources/css/styles-responsive.css">
@@ -227,8 +227,8 @@ while ($row = $ListadoIpress->fetch(PDO::FETCH_NAMED)) {
   </div>
 
   <script src="resources/js/sweetalert2.all.min.js"></script>
-  <script language="javascript" src="resources/js/jquery-3.6.0.min.js"></script>
-  <script language="javascript" src="resources/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  <script language="javascript" src="resources/js/jquery-3.6.1.min.js"></script>
+  <script language="javascript" src="resources/js/jquery-ui-1.13.2/jquery-ui.min.js"></script>
   <script language="javascript" src="resources/js/function.js"></script>
   <script src="resources/js/main.js"></script>
   <script>
